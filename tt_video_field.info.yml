@@ -1,0 +1,6 @@
+name: Video field
+type: module
+description: TT standard video field
+core: 8.x
+package: TamTam
+php: 5.6

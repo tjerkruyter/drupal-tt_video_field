@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Contains tt_video_field.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function tt_video_field_help($route_name, RouteMatchInterface $route_match) {
+    switch( $route_name ) {
+        // Main module help for the tt_video_field module.
+        case 'help.page.tt_video_field':
+            $output = '';
+            $output .= '<h3>' . t('About') . '</h3>';
+            $output .= '<p>' . t('TT standard video field') . '</p>';
+
+            return $output;
+
+        default:
+    }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function tt_video_field_theme() {
+    return [
+      'tt_video_field' => [
+        'render element' => 'children',
+        'variables'      => [
+          'module_path' => '',
+          'instance_id' => 0,
+          'id'          => '',
+          'platform'    => '',
+          'title'       => '',
+          'description' => '',
+        ]
+      ],
+    ];
+}

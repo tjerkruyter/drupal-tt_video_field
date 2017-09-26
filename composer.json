@@ -1,0 +1,14 @@
+{
+  "name": "drupal/tt_video_field",
+  "type": "drupal-module",
+  "description": "TT standard video field",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.tamtam.nl",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "php@tamtam.nl",
+    "source": "https://bitbucket.org/tamtam-nl/tt_video_field"
+  },
+  "require": { }
+}

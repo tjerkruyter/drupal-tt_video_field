@@ -1,0 +1,9 @@
+{% from module_path ~ '/templates/video.html.twig' import video as video %}
+
+{{ video({
+  'instance_id' : instance_id,
+  'id' : id,
+  'platform' : platform,
+  'title' : title,
+  'description' : description
+}) }}
