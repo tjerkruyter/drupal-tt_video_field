@@ -61,7 +61,6 @@ class VideoFormatterType extends FormatterBase {
 
             $elements[$delta] = [
               '#theme'       => 'tt_video_field',
-              '#module_path' => drupal_get_path('module', 'tt_video_field'),
               '#instance_id' => $value['instance_id'],
               '#id'          => $value['id'],
               '#platform'    => $value['platform'],

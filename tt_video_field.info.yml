@@ -4,3 +4,10 @@ description: TT standard video field
 core: 8.x
 package: TamTam
 php: 5.6
+dependencies:
+  - components
+
+component-libraries:
+  tt_video_field:
+    paths:
+      - templates
