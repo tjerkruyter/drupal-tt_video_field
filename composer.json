@@ -10,5 +10,7 @@
     "issues": "php@tamtam.nl",
     "source": "https://bitbucket.org/tamtam-nl/tt_video_field"
   },
-  "require": { }
+  "require": {
+    "drupal/components": "~1.0"
+  }
 }

@@ -1,5 +1,25 @@
-{% from module_path ~ '/templates/video.html.twig' import video as video %}
+{% from '@tt_video_field/video.twig' import video as video %}
 
+{#
+    @shelf-version: 1.0.0
+    Video macro
+
+    data {
+        instance_id: boolean,
+        id: 'string',
+        platform: 'string', (youtube or vimeo)
+        title: 'string',
+        description: 'string',
+        thumbnail: 'string', (optional)
+        total_time: 'string', (optional)
+        start_time: 'string', (optional)
+        classes: 'string', (optional)
+        autopause: boolean, (optional, default 1)
+        controls: boolean, (optional, default 0)
+        info: boolean (optional, default 0),
+        inview: boolean (optional, default true)
+    }
+ #}
 {{ video({
   'instance_id' : instance_id,
   'id' : id,
