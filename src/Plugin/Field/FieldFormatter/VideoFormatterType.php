@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Site\Settings;
 
 /**
  * Plugin implementation of the 'tt_video_formatter_type' formatter.
@@ -61,11 +62,13 @@ class VideoFormatterType extends FormatterBase {
 
             $elements[$delta] = [
               '#theme'       => 'tt_video_field',
+              '#module_path' => drupal_get_path('module', 'tt_video_field'),
               '#instance_id' => $value['instance_id'],
               '#id'          => $value['id'],
               '#platform'    => $value['platform'],
               '#title'       => $value['title'],
               '#description' => $value['description'],
+              '#files'       => $value['files'],
             ];
         }
 
@@ -84,13 +87,23 @@ class VideoFormatterType extends FormatterBase {
     protected function viewValue(FieldItemInterface $item) {
         // The text value has no text format assigned to it, so the user input
         // should equal the output, including newlines.
-        return [
+        $data =  [
           'instance_id' => 0,
           'id'          => $this->getVideoIdFromInput($item->url),
           'platform'    => $this->getPlatformFromInput($item->url),
           'title'       => Html::escape($item->title),
           'description' => nl2br(Html::escape($item->values['description'])),
+          'files'       => [],
         ];
+
+        // Check wether to get vimeo full urls or not and vimeo access token
+        $get_full_urls = Settings::get('vimeo_api_get_full_urls', false);
+        $access_token = Settings::get('vimeo_api_access_token', false);
+        if(isset($data['id']) && $data['platform'] == 'vimeo' && $access_token != false && $get_full_urls != false) {
+            $data['files'] = $this->get_video_files_for_vimeo_id($data['id'], $access_token);
+        }
+
+        return $data;
     }
 
     private function getVideoIdFromInput($input) {
@@ -117,4 +130,37 @@ class VideoFormatterType extends FormatterBase {
         return isset($matches['id']) ? 'vimeo' : FALSE;
     }
 
+    private function get_video_files_for_vimeo_id($id = null, $access_token) {
+        if(!$id) {
+            return [];
+        }
+
+        // "Caching" vimeo video files info via state
+        $state_video_files = \Drupal::state()->get('vimeo_video_files_' . $id);
+        if(isset($state_video_files)) {
+            return json_decode($state_video_files);
+        }
+
+        $client = \Drupal::httpClient();
+        
+        $response = $client->get('https://api.vimeo.com/videos/' . $id, [
+            'headers' => [ 'Authorization' => 'Bearer ' . $access_token ],
+        ]);
+
+        $status_code = $response->getStatusCode();
+        if($status_code != 200) {
+            \Drupal::logger('tt_video_field')->notice("Error for vimeo api call with video id: {$id} and status code: {$status_code }");
+            return [];
+        }
+
+        $results = json_decode($response->getBody());
+        
+        if(isset($results->files)) {
+            // Save video file info in state
+            \Drupal::state()->set('vimeo_video_files_' . $id, json_encode($results->files));
+            return $results->files;
+        }
+
+        return [];
+    }
 }

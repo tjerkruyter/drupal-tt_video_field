@@ -73,7 +73,6 @@ class VideoFieldType extends FieldItemBase {
               'type'   => 'varchar',
               'length' => (int)255,
             ],
-
           ],
         ];
 
@@ -161,6 +160,11 @@ class VideoFieldType extends FieldItemBase {
           ],
         ];
 
+        $form['include_filepaths_for_video'] = array(
+          // @todo: make this an actual setting on the field
+          '#markup' => '<strong>Please note:</strong> it is possible to use the Vimeo API to return full filepaths (per viewport) for each video. Make sure to set "vimeo_api_get_full_urls" to true and add a "vimeo_api_access_token" variable in settings.local.php.',
+        );
+
         return $form;
     }
 
@@ -172,5 +176,12 @@ class VideoFieldType extends FieldItemBase {
           'allowed_providers' => [],
         ];
     }
+
+    // @todo: get vimeo video files (all viewports) info in preSave hook and save in db
+    // public function preSave() {
+    //   $entity = $this->getEntity();
+    //   $field_name = $this->getFieldDefinition()->getName();
+    //   var_dump($entity->$field_name->url);exit;
+    // }
 
 }
